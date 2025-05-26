@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenangan Romantis Kita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fce7f3; /* Warna latar belakang yang lembut */
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        .memory-card {
+            background-color: #fff;
+            border-radius: 1.5rem; /* Sudut membulat */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer; /* Menandakan bahwa kartu bisa diklik */
+            position: relative; /* Diperlukan untuk positioning teks hover */
+            overflow: hidden; /* Memastikan teks hover tidak keluar dari batas kartu */
+        }
+        .memory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        .photo-collage,
+        .video-collage {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .photo-collage img {
+            width: 100%;
+            height: 150px; /* Tinggi tetap untuk kolase foto */
+            object-fit: cover; /* Memastikan gambar mengisi area */
+            border-radius: 0.75rem; /* Sudut membulat untuk gambar */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        .photo-collage img:hover {
+            transform: scale(1.03);
+        }
+        .video-collage iframe {
+            width: 100%;
+            height: 150px; /* Tinggi tetap untuk kolase video, sesuaikan jika perlu */
+            border-radius: 0.75rem; /* Sudut membulat untuk video */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        .video-collage iframe:hover {
+            transform: scale(1.03);
+        }
+        /* Modal untuk tampilan gambar penuh */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .image-modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 1rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Responsif untuk layar kecil */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .memory-card {
+                padding: 1.5rem;
+            }
+            .photo-collage,
+            .video-collage {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 0.75rem;
+            }
+            .photo-collage img,
+            .video-collage iframe {
+                height: 100px;
+            }
+            .image-modal-content {
+                max-width: 95%;
+                max-height: 95%;
+            }
+        }
+        /* Menyembunyikan iframe YouTube audio secara visual */
+        .youtube-audio {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none; /* Mencegah interaksi mouse */
+        }
+
+        /* Gaya untuk Modal Kenangan */
+        .memory-modal {
+            display: none; /* Sembunyikan secara default */
+            position: fixed;
+            z-index: 999; /* Di bawah image-modal, di atas konten utama */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7); /* Overlay semi-transparan */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .memory-modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            max-width: 90%; /* Lebar maksimal */
+            max-height: 90vh; /* Tinggi maksimal viewport */
+            overflow-y: auto; /* Aktifkan scroll jika kontennya panjang */
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .memory-modal .close-button {
+            top: 15px;
+            right: 25px;
+            color: #999; /* Warna abu-abu agar tidak terlalu menonjol */
+            font-size: 30px;
+        }
+        .memory-modal .close-button:hover {
+            color: #333;
+        }
+
+        /* Gaya untuk teks "Lihat Selengkapnya" */
+        .view-more {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Latar belakang semi-transparan */
+            color: white;
+            text-align: center;
+            padding: 0.75rem 0;
+            border-bottom-left-radius: 1.5rem;
+            border-bottom-right-radius: 1.5rem;
+            opacity: 0; /* Sembunyikan secara default */
+            visibility: hidden; /* Sembunyikan juga dari screen reader saat tidak terlihat */
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            transform: translateY(100%); /* Mulai dari bawah kartu */
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+
+        .memory-card:hover .view-more {
+            opacity: 1; /* Tampilkan saat hover */
+            visibility: visible;
+            transform: translateY(0); /* Geser ke posisi normal */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-gradient-to-r from-pink-400 to-purple-500 text-white py-8 shadow-lg rounded-b-3xl">
+        <div class="container text-center">
+            <h1 class="text-5xl font-bold mb-2 tracking-tight">Kenangan Romantis Kita</h1>
+            <p class="text-xl opacity-90">Kenangan setiap momen bersama arya & fifa</p>
+        </div>
+    </header>
+
+    <main class="container py-10">
+
+        <div class="memory-card" data-memory-id="1">
+            <h2 class="text-3xl font-semibold text-pink-600 mb-3">Arya Pertama Kali Ke Jember</h2>
+            <p class="text-gray-500 text-sm mb-4">Tanggal: 17 Juli 2024</p>
+            <img src="https://placehold.co/800x500/FFD1DC/663399?text=Arya+di+Jember+Utama" alt="Foto Utama Arya di Jember" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="text-lg text-gray-700 mb-4">
+                hari ini hari arya pertama kali ke jember guys, agak bingung naik dari stasiun mana, terus kita tuh ketemu ya aku fifa exited syekali ketemu arya soalnya tuh kita LDR guys jarang ketemu cuma callan sama chat an aja, seru seru, kita awalnya tuh malu malu hehehehe...
+            </p>
+            <div class="view-more">Lihat Selengkapnya</div>
+        </div>
+
+        <div class="memory-card" data-memory-id="2">
+            <h2 class="text-3xl font-semibold text-pink-600 mb-3">Liburan ke Pantai</h2>
+            <p class="text-gray-500 text-sm mb-4">Tanggal: 20 Juni 2023</p>
+            <img src="https://placehold.co/800x500/A7D9FF/336699?text=Pantai+Kita+Utama" alt="Foto Utama Liburan ke Pantai" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="text-lg text-gray-700 mb-4">
+                Deburan ombak, pasir putih, dan tanganmu dalam genggamanku. Liburan itu adalah pelarian sempurna dari hiruk pikuk kota...
+            </p>
+            <div class="view-more">Lihat Selengkapnya</div>
+        </div>
+
+        <div class="memory-card" data-memory-id="3">
+            <h2 class="text-3xl font-semibold text-pink-600 mb-3">Ulang Tahunku yang Tak Terlupakan</h2>
+            <p class="text-gray-500 text-sm mb-4">Tanggal: 10 September 2023</p>
+            <img src="https://placehold.co/800x500/FFC0CB/800080?text=Ultah+Utama" alt="Foto Utama Ulang Tahun" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="text-lg text-gray-700 mb-4">
+                Kejutan yang kamu siapkan membuatku terharu. Kamu selalu tahu bagaimana membuatku merasa istimewa...
+            </p>
+            <div class="view-more">Lihat Selengkapnya</div>
+        </div>
+
+        </main>
+
+    <footer class="bg-pink-300 text-white py-6 text-center rounded-t-3xl">
+        <p>© 2025 Kenangan Kita. Dibuat dengan ❤️ untukmu.</p>
+    </footer>
+
+    <div id="imageModal" class="image-modal">
+        <span class="close-button">×</span>
+        <img class="image-modal-content" id="modalImage">
+    </div>
+
+    <div id="memoryDetailModal" class="memory-modal">
+        <div class="memory-modal-content">
+            <span class="close-button" id="closeMemoryModal">×</span>
+            <div id="modalMemoryContent">
+                </div>
+        </div>
+    </div>
+
+    <div class="youtube-audio">
+        <iframe
+            width="1"
+            height="1"
+            src="https://www.youtube.com/embed/2Vv-BfVoq4g?autoplay=1&loop=1&playlist=2Vv-BfVoq4g&controls=0&modestbranding=1&rel=0&showinfo=0&mute=1"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="Lagu Latar Belakang Romantis">
+        </iframe>
+    </div>
+
+    <script>
+        // Data Kenangan Lengkap (Simulasi dari "halaman detail" terpisah)
+        // Anda akan mengisi ini dengan konten full dari setiap kenangan Anda
+        const memoriesData = {
+            1: {
+                title: "Arya Pertama Kali Ke Jember",
+                date: "17 Juli 2024",
+                fullDescription: "hari ini hari arya pertama kali ke jember guys, agak bingung naik dari stasiun mana, terus kita tuh ketemu ya aku fifa exited syekali ketemu arya soalnya tuh kita LDR guys jarang ketemu cuma callan sama chat an aja, seru seru, kita awalnya tuh malu malu hehehehe, soalnya kan udah lama ga ketemu jadi kaya first date lagi bjir lahh, hehehe , tapi ya guys yang malu itu lebih banyak fifa aku arya mah cool orangnya hahaha.",
+                mainImage: "https://placehold.co/1000x600/FFD1DC/663399?text=Arya+di+Jember+Utama",
+                photos: [
+                    "https://placehold.co/600x400/FFD1DC/663399?text=Arya+di+Jember+1",
+                    "https://placehold.co/600x400/FFD1DC/663399?text=Arya+di+Jember+2",
+                    "https://placehold.co/600x400/FFD1DC/663399?text=Arya+di+Jember+3",
+                    "https://placehold.co/600x400/FFD1DC/663399?text=Arya+di+Jember+4",
+                    "https://placehold.co/600x400/FFD1DC/663399?text=Arya+di+Jember+5",
+                    "https://placehold.co/600x400/FFD1DC/663399?text=Arya+di+Jember+6",
+                    "https://placehold.co/600x400/FFD1DC/663399?text=Arya+di+Jember+7"
+                ],
+                videos: [
+                    "https://www.youtube.com/embed/VIDEO_ID_1?controls=0&modestbranding=1&rel=0&showinfo=0&mute=1", // Ganti dengan ID video YouTube Anda
+                    "https://www.youtube.com/embed/VIDEO_ID_2?controls=0&modestbranding=1&rel=0&showinfo=0&mute=1"  // Ganti dengan ID video YouTube Anda
+                ]
+            },
+            2: {
+                title: "Liburan ke Pantai",
+                date: "20 Juni 2023",
+                fullDescription: "Deburan ombak, pasir putih, dan tanganmu dalam genggamanku. Liburan itu adalah pelarian sempurna dari hiruk pikuk kota. Aku suka bagaimana kita bisa menjadi diri sendiri sepenuhnya di sana.",
+                mainImage: "https://placehold.co/1000x600/A7D9FF/336699?text=Pantai+Kita+Utama",
+                photos: [
+                    "https://placehold.co/600x400/A7D9FF/336699?text=Pantai+Kita+1",
+                    "https://placehold.co/600x400/A7D9FF/336699?text=Sunset+Romantis+1",
+                    "https://placehold.co/600x400/A7D9FF/336699?text=Berdua+di+Pantai+1",
+                    "https://placehold.co/600x400/A7D9FF/336699?text=Jalan+Jalan+Pantai+1"
+                ],
+                videos: [
+                    "https://www.youtube.com/embed/VIDEO_ID_3?controls=0&modestbranding=1&rel=0&showinfo=0&mute=1",
+                    "https://www.youtube.com/embed/VIDEO_ID_4?controls=0&modestbranding=1&rel=0&showinfo=0&mute=1"
+                ]
+            },
+            3: {
+                title: "Ulang Tahunku yang Tak Terlupakan",
+                date: "10 September 2023",
+                fullDescription: "Kejutan yang kamu siapkan membuatku terharu. Kamu selalu tahu bagaimana membuatku merasa istimewa. Terima kasih untuk semua tawa dan kebahagiaan yang kamu bawa ke dalam hidupku.",
+                mainImage: "https://placehold.co/1000x600/FFC0CB/800080?text=Ultah+Utama",
+                photos: [
+                    "https://placehold.co/600x400/FFC0CB/800080?text=Kue+Ultah+1",
+                    "https://placehold.co/600x400/FFC0CB/800080?text=Hadiah+Ultah+1"
+                ],
+                videos: [
+                    "https://www.youtube.com/embed/VIDEO_ID_5?controls=0&modestbranding=1&rel=0&showinfo=0&mute=1"
+                ]
+            }
+            // Tambahkan lebih banyak kenangan di sini dengan format yang sama
+        };
+
+        // --- JavaScript untuk Modal Gambar Penuh ---
+        const imageModal = document.getElementById("imageModal");
+        const modalImage = document.getElementById("modalImage");
+        const closeImageModalButton = imageModal.querySelector(".close-button");
+
+        document.addEventListener("click", function(event) {
+            // Memastikan klik pada gambar membuka modal gambar, bukan modal kenangan
+            if (event.target.tagName === 'IMG' && event.target.closest('.photo-collage, .memory-card')) {
+                modalImage.src = event.target.src;
+                modalImage.alt = event.target.alt;
+                imageModal.style.display = "flex";
+                event.stopPropagation(); // Mencegah event ini memicu event lain di parent
+            }
+        });
+
+        closeImageModalButton.addEventListener("click", function() {
+            imageModal.style.display = "none";
+        });
+
+        imageModal.addEventListener("click", function(event) {
+            if (event.target === imageModal) {
+                imageModal.style.display = "none";
+            }
+        });
+
+        // --- JavaScript untuk Modal Detail Kenangan ---
+        const memoryDetailModal = document.getElementById("memoryDetailModal");
+        const modalMemoryContent = document.getElementById("modalMemoryContent");
+        const closeMemoryModalButton = document.getElementById("closeMemoryModal");
+        const memoryCards = document.querySelectorAll(".memory-card");
+
+        memoryCards.forEach(card => {
+            card.addEventListener("click", function(event) {
+                // Mencegah klik pada gambar di kartu ringkasan memicu modal kenangan
+                if (event.target.tagName === 'IMG' || event.target.closest('.view-more')) {
+                    return; // Biarkan modal gambar atau teks "Lihat Selengkapnya" yang menangani
+                }
+
+                const memoryId = this.dataset.memoryId;
+                const memory = memoriesData[memoryId];
+
+                if (memory) {
+                    let photosHtml = memory.photos.map(src =>
+                        `<img src="${src}" alt="Foto Kenangan" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=Foto+Tidak+Ada';">`
+                    ).join('');
+
+                    let videosHtml = memory.videos.map(videoId =>
+                        `<iframe src="https://www.youtube.com/embed/$${videoId}?autoplay=0&controls=1&modestbranding=1&rel=0&showinfo=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Video Kenangan"></iframe>`
+                    ).join('');
+
+                    modalMemoryContent.innerHTML = `
+                        <h2 class="text-4xl font-bold text-pink-700 mb-3">${memory.title}</h2>
+                        <p class="text-gray-500 text-base mb-4">Tanggal: ${memory.date}</p>
+                        <img src="${memory.mainImage}" alt="Foto Utama ${memory.title}" class="w-full h-80 object-cover rounded-lg mb-6">
+                        <p class="text-lg text-gray-700 mb-6">${memory.fullDescription}</p>
+
+                        <h3 class="text-2xl font-semibold text-pink-600 mt-8 mb-4">Galeri Foto</h3>
+                        <div class="photo-collage">${photosHtml}</div>
+
+                        <h3 class="text-2xl font-semibold text-pink-600 mt-8 mb-4">Video Kenangan</h3>
+                        <div class="video-collage">${videosHtml}</div>
+                    `;
+
+                    memoryDetailModal.style.display = "flex";
+                }
+            });
+        });
+
+        closeMemoryModalButton.addEventListener("click", function() {
+            memoryDetailModal.style.display = "none";
+            // Opsional: Hentikan semua video yang mungkin sedang diputar di modal
+            const iframes = modalMemoryContent.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                let src = iframe.src;
+                iframe.src = src; // Reload iframe untuk menghentikan video
+            });
+        });
+
+        memoryDetailModal.addEventListener("click", function(event) {
+            if (event.target === memoryDetailModal) {
+                memoryDetailModal.style.display = "none";
+                const iframes = modalMemoryContent.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    let src = iframe.src;
+                    iframe.src = src;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
