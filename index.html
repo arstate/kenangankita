@@ -65,7 +65,9 @@
         }
         /* Modal untuk tampilan gambar penuh */
         .image-modal {
-            display: none;
+            display: flex; /* Gunakan flex untuk centering */
+            opacity: 0; /* Mulai dengan transparan */
+            visibility: hidden; /* Sembunyikan dari tata letak */
             position: fixed;
             z-index: 1000;
             left: 0;
@@ -77,6 +79,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            transition: opacity 0.3s ease-out, visibility 0.3s ease-out; /* Transisi halus */
         }
         .image-modal-content {
             margin: auto;
@@ -136,7 +139,9 @@
 
         /* Gaya untuk Modal Kenangan */
         .memory-modal {
-            display: none; /* Sembunyikan secara default */
+            display: flex; /* Gunakan flex untuk centering */
+            opacity: 0; /* Mulai dengan transparan */
+            visibility: hidden; /* Sembunyikan dari tata letak */
             position: fixed;
             z-index: 999; /* Di bawah image-modal, di atas konten utama */
             left: 0;
@@ -148,6 +153,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            transition: opacity 0.3s ease-out, visibility 0.3s ease-out; /* Transisi halus */
         }
 
         .memory-modal-content {
@@ -186,7 +192,6 @@
             border-bottom-right-radius: 1.5rem;
             opacity: 0; /* Sembunyikan secara default */
             visibility: hidden; /* Sembunyikan juga dari screen reader saat tidak terlihat */
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
             font-weight: 600;
             letter-spacing: 0.05em;
             transform: translateY(100%); /* Mulai dari bawah kartu */
@@ -210,6 +215,17 @@
     </header>
 
     <main class="container py-10">
+
+        <!-- Kolom Kenangan Baru: Fifa Jenguk Arya (dipindahkan ke paling atas) -->
+        <div class="memory-card" data-memory-id="5">
+            <h2 class="text-3xl font-semibold text-pink-600 mb-3">Fifa Jenguk Arya</h2>
+            <p class="text-gray-500 text-sm mb-4">Tanggal: 3 Juni 2025</p>
+            <img src="https://lh3.googleusercontent.com/pw/AP1GczO2KJX-dwKRYRdQcITtzDBXGUZ8cA4xjeN7HmiXZ-PJfKjkEr8lh_NGfty-PcJmXeQvuC6E9J5k_N1i7qoKPVpRb_aXksbuVNRwRVC4LvaUnsgFftk=w2400" alt="Thumbnail Fifa Jenguk Arya" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="text-lg text-gray-700 mb-4">
+                hari ini aku fifa jenguk si arya yang habis kecelakaan, emang itu anak suka bikin deg degan biasanya suka prank prank kecelakaan apalah, tapi yang ini beneran bejir, lalu aku fifa jenguk arya ke sidoarjo, sumpah deg degan banget ketemu mamanya arya haha...
+            </p>
+            <div class="view-more">Lihat Selengkapnya</div>
+        </div>
 
         <div class="memory-card" data-memory-id="1">
             <h2 class="text-3xl font-semibold text-pink-600 mb-3">Arya Pertama Kali Ke Jember</h2>
@@ -283,8 +299,7 @@
     </div>
 
     <script>
-        // Data Kenangan Lengkap (Simulasi dari "halaman detail" terpisah)
-        // Anda akan mengisi ini dengan konten full dari setiap kenangan Anda
+        // Data Kenangan Lengkap
         const memoriesData = {
             1: {
                 title: "Arya Pertama Kali Ke Jember",
@@ -301,8 +316,7 @@
                     "https://placehold.co/600x400/FFD1DC/663399?text=Arya+di+Jember+7"
                 ],
                 videos: [
-                    "https://www.youtube.com/embed/11", // Ganti dengan ID video YouTube Anda
-                    "https://www.youtube.com/embed/12"  // Ganti dengan ID video YouTube Anda
+                    "https://drive.google.com/file/d/1aB2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q/preview" // Contoh Google Drive embed URL
                 ]
             },
             2: {
@@ -317,8 +331,7 @@
                     "https://placehold.co/600x400/A7D9FF/336699?text=Jalan+Jalan+Pantai+1"
                 ],
                 videos: [
-                    "https://www.youtube.com/embed/13",
-                    "https://www.youtube.com/embed/14"
+                    "https://drive.google.com/file/d/1q2w3e4r5t6y7u8i9o0p1a2s3d4f5g6h/preview" // Contoh Google Drive embed URL
                 ]
             },
             3: {
@@ -328,13 +341,13 @@
                 mainImage: "https://placehold.co/1000x600/FFC0CB/800080?text=Ultah+Utama",
                 photos: [
                     "https://placehold.co/600x400/FFC0CB/800080?text=Kue+Ultah+1",
-                    "https://placehold.co/600x400/FFC0CB/800080?text=Hadiah+Ultah+1"
+                    "https://placehold.0/600x400/FFC0CB/800080?text=Hadiah+Ultah+1"
                 ],
                 videos: [
-                    "https://www.youtube.com/embed/15"
+                    "https://drive.google.com/file/d/1z9x8y7w6v5u4t3s2r1q0p9o8i7u6y5t/preview" // Contoh Google Drive embed URL
                 ]
             },
-            4: { // Kenangan Baru
+            4: { // Kenangan Masih Adek Kakak an Date di Kodam
                 title: "Masih Adek Kakak an Date di Kodam",
                 date: "10 Oktober 2023",
                 fullDescription: "hari ini tuh kita masih sama sama ragu perasaaanya masing masing kalo fifa tuh takutnya \"masa aku ada perasaan sama adek adek\" kalau arya tuh takut kalau nanti cuma dibuat main main aja sama mbak-mbak, nahh waktu itu fifa mau bilang ke arya kalau hubungan ini anggep aja cuma adek kakak an aja, tapiiii.... fifa gaberani dan gajadi bilang karena katanya gabisa bilang, soalnya udah nyaman tuh sama arya ahahhahahahaha, dan akhirnya kita jajan bareng main bareng, trus akhirnya pulang dehhh, dan waktu dimotor fifa tiba tiba meluk arya hahahaha.",
@@ -346,8 +359,24 @@
                     "https://lh3.googleusercontent.com/pw/AP1GczP4-SViNl03-5BPnWsLjLqPlqYUh1aRTZ0zxlO8iU3_AaqWYYXQOVoOCljxXmgGsLlJ0YTNpmq7bMqlDyqQuxRnDRn9a3gDHr_cDU2Md_RYj5F320w=w2400"
                 ],
                 videos: [
-                    "FSFXIdiEfLA?si=iOfzFSwRApbtX8v3" // Hanya satu video ini yang akan ditampilkan
+                    "https://drive.google.com/file/d/1pd7dzhY0i5JGSb3q3qqJpiDn4298f1xv/preview" // Video Google Drive
                 ]
+            },
+            5: { // Kenangan Baru: Fifa Jenguk Arya
+                title: "Fifa Jenguk Arya",
+                date: "3 Juni 2025",
+                fullDescription: "hari ini aku fifa jenguk si arya yang habis kecelakaan, emang itu anak suka bikin deg degan biasanya suka prank prank kecelakaan apalah, tapi yang ini beneran bejir, lalu aku fifa jenguk arya ke sidoarjo, sumpah deg degan banget ketemu mamanya arya haha, aku arya maaci sayangku udah jenguk aku hehe lagi sakit gini bosan tapi waktu ada kmu jenguk pengen ngakak tapi gabisa apalah ini pake acara kecelakaan segala, maaci sayangku fifa lofyuuuu",
+                mainImage: "https://lh3.googleusercontent.com/pw/AP1GczO2KJX-dwKRYRdQcITtzDBXGUZ8cA4xjeN7HmiXZ-PJfKjkEr8lh_NGfty-PcJmXeQvuC6E9J5k_N1i7qoKPVpRb_aXksbuVNRwRVC4LvaUnsgFftk=w2400",
+                photos: [
+                    "https://lh3.googleusercontent.com/pw/AP1GczO2KJX-dwKRYRdQcITtzDBXGUZ8cA4xjeN7HmiXZ-PJfKjkEr8lh_NGfty-PcJmXeQvuC6E9J5k_N1i7qoKPVpRb_aXksbuVNRwRVC4LvaUnsgFftk=w2400",
+                    "https://lh3.googleusercontent.com/pw/AP1GczOjjxspjLVzlkjevmwLjsSyTIrKZB1_5JpgSMjIf8Dr8PtmtGrZAuWeZl1K2CgxfxVke2g_2MuA5u-mzHE9oVYrDqq7v70nLtRNc4ruu-ShxAMErsE=w2400",
+                    "https://lh3.googleusercontent.com/pw/AP1GczPlpDHU57xLrTzXNrA7ZkQmexD4128RQmCMzpgKsznZBEB6YHfjCgBXaTJn1-flzWmIx_SXDABoHqr1W_URTZPgwI4OlwZNDK5feJCsPPcTqoiloLM=w2400",
+                    "https://lh3.googleusercontent.com/pw/AP1GczPmZvlDcxHdHDmpNSpuFu-dTDyQbsnDN6Xt-Ja-blh18hmcKHwCjqvOkBwf9PD9dwQkib56GLUezlq-UvMNpkvMFT6kDVXHObt0hxm8xKS-31cHcD0",
+                    "https://lh3.googleusercontent.com/pw/AP1GczOpTdH6WexUnuOiUTFz1bFcyScL1RE_YEqeV-h-PMsmEZ_5WLiaWL8qTBLRVqcNZdJUteldWGBfsjPkHSDc13klzzUs1zGoTndN8gvC44n_BumbLmE=w2400",
+                    "https://lh3.googleusercontent.com/pw/AP1GczOVusrKNOSpluDzkbH_-zR_OAJo_4ri1nNW8hodtyG3f38O_hLVjJnkZxxzhYizggJFVxz0nppGU2TS-YA1piLrMuilDK7YDpIX82vqxMApEpfqi5I=w2400",
+                    "https://lh3.googleusercontent.com/pw/AP1GczN2ebbVdSQRFLtu9pAfa_j_QtRI1HnKtL24ghSBBrWUNw25qxJintjmHnQvru_6xcX73yltHAKU-L4awHpd460_M9PLTG3lIqG2DIy537SOWyC7830=w2400"
+                ],
+                videos: [] // Kosong karena Anda tidak memberikan URL video untuk kenangan ini
             }
         };
 
@@ -357,22 +386,33 @@
         const closeImageModalButton = imageModal.querySelector(".close-button");
 
         document.addEventListener("click", function(event) {
-            // Memastikan klik pada gambar membuka modal gambar, bukan modal kenangan
             if (event.target.tagName === 'IMG' && event.target.closest('.photo-collage, .memory-card')) {
                 modalImage.src = event.target.src;
                 modalImage.alt = event.target.alt;
                 imageModal.style.display = "flex";
-                event.stopPropagation(); // Mencegah event ini memicu event lain di parent
+                // Trigger reflow to ensure transition plays
+                imageModal.offsetWidth; 
+                imageModal.style.opacity = "1";
+                imageModal.style.visibility = "visible";
+                event.stopPropagation();
             }
         });
 
         closeImageModalButton.addEventListener("click", function() {
-            imageModal.style.display = "none";
+            imageModal.style.opacity = "0";
+            imageModal.style.visibility = "hidden";
+            setTimeout(() => {
+                imageModal.style.display = "none";
+            }, 300); // Sesuaikan dengan durasi transisi CSS
         });
 
         imageModal.addEventListener("click", function(event) {
             if (event.target === imageModal) {
-                imageModal.style.display = "none";
+                imageModal.style.opacity = "0";
+                imageModal.style.visibility = "hidden";
+                setTimeout(() => {
+                    imageModal.style.display = "none";
+                }, 300); // Sesuaikan dengan durasi transisi CSS
             }
         });
 
@@ -384,25 +424,22 @@
 
         memoryCards.forEach(card => {
             card.addEventListener("click", function(event) {
-                // Mencegah klik pada gambar di kartu ringkasan memicu modal kenangan
                 if (event.target.tagName === 'IMG' || event.target.closest('.view-more')) {
-                    return; // Biarkan modal gambar atau teks "Lihat Selengkapnya" yang menangani
+                    return;
                 }
 
                 const memoryId = this.dataset.memoryId;
                 const memory = memoriesData[memoryId];
 
                 if (memory) {
-                    // Memastikan photos adalah array sebelum memanggil map
                     let photosHtml = (memory.photos || []).map(src =>
                         `<img src="${src}" alt="Foto Kenangan" class="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/333333?text=Foto+Tidak+Ada';">`
                     ).join('');
 
-                    // Memastikan videos adalah array sebelum memanggil map
-                    // Hanya mengambil video pertama jika ada
+                    // Menggunakan URL Google Drive embed
                     let videosHtml = (memory.videos && memory.videos.length > 0) ?
-                        `<iframe src="https://www.youtube.com/embed/$${memory.videos[0]}?autoplay=0&controls=1&modestbranding=1&rel=0&showinfo=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen title="Video Kenangan"></iframe>`
-                        : ''; // Jika tidak ada video, string kosong
+                        `<iframe src="${memory.videos[0]}" frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen title="Video Kenangan"></iframe>`
+                        : '';
 
                     modalMemoryContent.innerHTML = `
                         <h2 class="text-4xl font-bold text-pink-700 mb-3">${memory.title}</h2>
@@ -417,28 +454,40 @@
                     `;
 
                     memoryDetailModal.style.display = "flex";
+                    // Trigger reflow to ensure transition plays
+                    memoryDetailModal.offsetWidth; 
+                    memoryDetailModal.style.opacity = "1";
+                    memoryDetailModal.style.visibility = "visible";
                 }
             });
         });
 
         closeMemoryModalButton.addEventListener("click", function() {
-            memoryDetailModal.style.display = "none";
-            // Opsional: Hentikan semua video yang mungkin sedang diputar di modal
-            const iframes = modalMemoryContent.querySelectorAll('iframe');
-            iframes.forEach(iframe => {
-                let src = iframe.src;
-                iframe.src = src; // Reload iframe untuk menghentikan video
-            });
+            memoryDetailModal.style.opacity = "0";
+            memoryDetailModal.style.visibility = "hidden";
+            setTimeout(() => {
+                memoryDetailModal.style.display = "none";
+                // Hentikan semua video yang mungkin sedang diputar di modal
+                const iframes = modalMemoryContent.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    let src = iframe.src;
+                    iframe.src = src; // Reload iframe untuk menghentikan video
+                });
+            }, 300); // Sesuaikan dengan durasi transisi CSS
         });
 
         memoryDetailModal.addEventListener("click", function(event) {
             if (event.target === memoryDetailModal) {
-                memoryDetailModal.style.display = "none";
-                const iframes = modalMemoryContent.querySelectorAll('iframe');
-                iframes.forEach(iframe => {
-                    let src = iframe.src;
-                    iframe.src = src;
-                });
+                memoryDetailModal.style.opacity = "0";
+                memoryDetailModal.style.visibility = "hidden";
+                setTimeout(() => {
+                    memoryDetailModal.style.display = "none";
+                    const iframes = modalMemoryContent.querySelectorAll('iframe');
+                    iframes.forEach(iframe => {
+                        let src = iframe.src;
+                        iframe.src = src;
+                    });
+                }, 300); // Sesuaikan dengan durasi transisi CSS
             }
         });
     </script>
